@@ -47,8 +47,10 @@ const StudentPage = () => {
   }, []);
   return (
     <div className="p-6 flex flex-col justify-between items-center">
-        <div className=" font-bold text-[2.3rem]">All Students in Classroom</div>
-      <Table dataSource={students} columns={columns} />
+      <div className=" font-bold text-[2.3rem]">All Students in Classroom</div>
+      <div className="w-full overflow-auto">
+        <Table dataSource={students} columns={columns} />
+      </div>
     </div>
   );
 };

@@ -54,7 +54,7 @@ const PrincipalPage = () => {
       message.error("Something went wrong!!");
     }
   };
-
+  console.log("REACHED++++");
   const fetchAllTeachersAvailable = async () => {
     try {
       const response = await getAllTeachersAvailable();
@@ -63,7 +63,7 @@ const PrincipalPage = () => {
       message.error("Something went wrong!!");
     }
   };
-  
+
   useEffect(() => {
     if (role === "student") {
       form2.setFieldsValue({ classroomId: selectedClassroom });
@@ -89,12 +89,14 @@ const PrincipalPage = () => {
     fetchAllTeachersAvailable();
     fetchAllClassrooms();
   }, []);
+
   useEffect(() => {
     fetchAllTeachers();
     fetchAllStudents();
     fetchAllTeachersAvailable();
     fetchAllClassrooms();
   }, [fetcher]);
+
   const columnsTeachers = [
     {
       title: "ID",
@@ -188,7 +190,7 @@ const PrincipalPage = () => {
       title: "Classroom Id",
       dataIndex: "classroomId",
       key: "classroomId",
-      render: (_, record) => (record.classroomId || "No classroom assigned!!"), // Format the date
+      render: (_, record) => record.classroomId || "No classroom assigned!!", // Format the date
     },
     {
       title: "Actions",
@@ -246,6 +248,7 @@ const PrincipalPage = () => {
       message.success("Classroom created successfully");
       console.log("Submitted values:", newValues);
       setModalView(false);
+      setFetcher(!fetcher);
     } catch (error) {
       console.error("Error submitting classroom:", error);
       message.error("Something went wrong!!", error);
@@ -403,9 +406,9 @@ const PrincipalPage = () => {
     setRegisteredModal(false);
   };
   return (
-    <div className="flex flex-col justify-around items-center h-full w-full gap-5 p-6">
+    <div className="flex flex-col justify-around items-center h-full gap-5 p-6">
       <div
-        className="flex justify-end w-full flex-col md:flex-row items-center gap-5"
+        className="flex justify-end lg:w-full flex-col md:flex-row items-center gap-5"
         onClick={""}
       >
         <Button onClick={() => setView("STUDENT")}>Student</Button>
@@ -418,21 +421,25 @@ const PrincipalPage = () => {
       </div>
 
       {view === "TEACHER" && (
-        <Table
-          columns={columnsTeachers}
-          dataSource={teachers}
-          pagination={false}
-          className="shadow-xl rounded-xl overflow-hidden"
-        />
+        <div className="w-full overflow-auto">
+          <Table
+            columns={columnsTeachers}
+            dataSource={teachers}
+            pagination={false}
+            className="shadow-xl rounded-xl overflow-hidden"
+          />
+        </div>
       )}
 
       {(view == "STUDENT" || view == "") && (
-        <Table
-          columns={columnsStudents}
-          dataSource={students}
-          pagination={false}
-          className="shadow-xl rounded-xl overflow-hidden"
-        />
+        <div className="w-full overflow-auto">
+          <Table
+            columns={columnsStudents}
+            dataSource={students}
+            pagination={false}
+            className="shadow-xl rounded-xl overflow-hidden"
+          />
+        </div>
       )}
 
       {modalView && (
@@ -607,12 +614,14 @@ const PrincipalPage = () => {
       )}
 
       {view == "CLASSROOM" && (
-        <Table
-          dataSource={classroomData}
-          columns={columns}
-          pagination={{ pageSize: 5 }} // Adjust page size as needed
-          rowKey="id"
-        />
+        <div className="w-full overflow-auto">
+          <Table
+            dataSource={classroomData}
+            columns={columns}
+            pagination={{ pageSize: 5 }} // Adjust page size as needed
+            rowKey="id"
+          />
+        </div>
       )}
 
       {teacherAssignModal && (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, message } from "antd";
 import { loginUser } from "../api/login";
@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
 
- 
+  const [redirect, setRedirect] = useState(false);
+
   const onFinish = async (values) => {
     try {
       const response = await loginUser(values);
@@ -21,13 +22,19 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
 
-        navigate("/home");
+        setRedirect(true);
       }
     } catch (error) {
       message.error("Something went wrong !!");
     }
     console.log("Received values of form: ", values);
   };
+
+  useEffect(() => {
+    if (redirect) {
+      setTimeout(() => navigate("/home"), 100);
+    }
+  }, [redirect]);
 
   return (
     <div className="h-full w-full flex justify-center items-center flex-col gap-5 p-9">
@@ -77,7 +84,6 @@ const Login = () => {
           <Button block type="primary" htmlType="submit">
             Log in
           </Button>
-          or <a href="">Register now!</a>
         </Form.Item>
       </Form>
     </div>

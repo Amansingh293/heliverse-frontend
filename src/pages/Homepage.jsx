@@ -11,13 +11,16 @@ const Homepage = () => {
   const navigate = useNavigate();
 
   const tokenChecker = () => {
-    if (
-      localStorage.getItem("token") == undefined ||
-      localStorage.getItem("role") == undefined
-    ) {
+    const token = localStorage.getItem("token");
+    const storedRole = localStorage.getItem("role");
+
+    if (!token || !storedRole) {
       message.error("Please Login Again");
       navigate("/");
+      return;
     }
+
+    setRole(storedRole);
   };
 
   useEffect(() => {
@@ -25,10 +28,10 @@ const Homepage = () => {
   }, []);
 
   return (
-    <div className="">
+    <div className="w-[100%]">
       {role == "PRINCIPAL" && <PrincipalPage />}
       {role == "TEACHER" && <TeacherPage />}
-      {role == "STUDENT" && <StudentPage/>}
+      {role == "STUDENT" && <StudentPage />}
     </div>
   );
 };

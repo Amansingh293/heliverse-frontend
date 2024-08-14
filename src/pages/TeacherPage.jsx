@@ -210,11 +210,13 @@ const TeacherPage = () => {
         <div className="font-bold text-[2rem]">
           Classname : {data?.classroomName}
         </div>
-        <Table
-          dataSource={allStudents}
-          columns={columns}
-          pagination={{ pageSize: 10 }} // Adjust page size as needed
-        />
+        <div className="w-full overflow-auto">
+          <Table
+            dataSource={allStudents}
+            columns={columns}
+            pagination={{ pageSize: 10 }} // Adjust page size as needed
+          />
+        </div>
       </div>
       {editmodal && (
         <Modal
