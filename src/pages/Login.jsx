@@ -25,7 +25,7 @@ const Login = () => {
         setRedirect(true);
       }
     } catch (error) {
-      message.error("Something went wrong !!");
+      message.error("Wrong email or password !!");
     }
     console.log("Received values of form: ", values);
   };
