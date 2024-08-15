@@ -1,11 +1,41 @@
-body{
-    height: 100vh;
+body {
+  height: 100vh;
 }
 
-#root{
-    height: 100%;
+#root {
+  height: 100%;
 }
 
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
+}
+.loader-parent {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  opacity: 0.7;
+  background-color:rgb(233, 233, 233);
+}
+
+.loader {
+  border: 7px solid;
+  border-top: 7px solid yellow;
+  border-right: 7px solid yellow;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  animation: rolling 0.9s infinite linear;
+}
+
+@keyframes rolling {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate((0deg));
+  }
 }

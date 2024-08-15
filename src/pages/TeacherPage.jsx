@@ -19,6 +19,7 @@ import {
 } from "../api/teacherApi";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Loader from "../components/Loader";
 
 const TeacherPage = () => {
   const [allStudents, setAllStudents] = useState();
@@ -32,6 +33,7 @@ const TeacherPage = () => {
   const [selectedClassroom, setSelectedClassroom] = useState(null);
   const [isTimeTableModalVisible, setIsTimeTableModalVisible] = useState(null);
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   const getAllStudentsTeacher = async () => {
     try {
@@ -156,6 +158,7 @@ const TeacherPage = () => {
     setRole(value);
   };
   const handleSave = async (values) => {
+    setLoading(true);
     try {
       console.log(values);
       console.log(currentRecord);
@@ -174,8 +177,10 @@ const TeacherPage = () => {
       message.error(e);
     }
     setEditmodal(false);
+    setLoading(false);
   };
   const handleRegister = async (values) => {
+    setLoading(true);
     console.log("Form Submitted with Values:", values);
     try {
       const response = await createUserStudent(values);
@@ -188,135 +193,155 @@ const TeacherPage = () => {
     }
 
     setRegisteredModal(false);
+    setLoading(false);
   };
   return (
     <>
-      <div className=" flex flex-col gap-5 p-7">
-        <div className="flex justify-around items-center">
-          <Button
-            onClick={() => setRegisteredModal(true)}
-            className="w-[10rem]"
-          >
-            Register User
-          </Button>
-          {/* <Button
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className=" flex flex-col gap-5 p-7">
+            <div className="flex justify-around items-center">
+              <Button
+                onClick={() => setRegisteredModal(true)}
+                className="w-[10rem]"
+              >
+                Register User
+              </Button>
+              {/* <Button
             onClick={() => setIsTimeTableModalVisible(true)}
             className="w-[10rem]"
           >
             Create Timetable
           </Button> */}
-        </div>
+            </div>
 
-        <div className="font-bold text-[2rem]">
-          Classname : {data?.classroomName}
-        </div>
-        <div className="w-full overflow-auto">
-          <Table
-            dataSource={allStudents}
-            columns={columns}
-            pagination={{ pageSize: 10 }} // Adjust page size as needed
-          />
-        </div>
-      </div>
-      {editmodal && (
-        <Modal
-          title="Edit Student Details"
-          visible={editmodal}
-          onCancel={() => setEditmodal(false)}
-          footer={null}
-        >
-          <Form layout="vertical" onFinish={handleSave}>
-            <Form.Item
-              name="name"
-              label="Name"
-              rules={[{ required: true, message: "Please input the name!" }]}
+            <div className="font-bold text-[2rem]">
+              Classname : {data?.classroomName}
+            </div>
+            <div className="w-full overflow-auto">
+              <Table
+                dataSource={allStudents}
+                columns={columns}
+                pagination={{ pageSize: 10 }} // Adjust page size as needed
+              />
+            </div>
+          </div>
+          {editmodal && (
+            <Modal
+              title="Edit Student Details"
+              visible={editmodal}
+              onCancel={() => setEditmodal(false)}
+              footer={null}
             >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[{ required: true, message: "Please input the email!" }]}
+              <Form layout="vertical" onFinish={handleSave}>
+                <Form.Item
+                  name="name"
+                  label="Name"
+                  rules={[
+                    { required: true, message: "Please input the name!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="email"
+                  label="Email"
+                  rules={[
+                    { required: true, message: "Please input the email!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Save
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Modal>
+          )}{" "}
+          {registeredModal && (
+            <Modal
+              title="Register User"
+              visible={registeredModal}
+              onCancel={() => setRegisteredModal(false)}
+              footer={null}
             >
-              <Input />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Save
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}{" "}
-      {registeredModal && (
-        <Modal
-          title="Register User"
-          visible={registeredModal}
-          onCancel={() => setRegisteredModal(false)}
-          footer={null}
-        >
-          <Form layout="vertical" onFinish={handleRegister}>
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input the name!" }]}
-            >
-              <Input />
-            </Form.Item>
+              <Form layout="vertical" onFinish={handleRegister}>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    { required: true, message: "Please input the name!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                { required: true, message: "Please input the email!" },
-                { type: "email", message: "Please input a valid email!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    { required: true, message: "Please input the email!" },
+                    { type: "email", message: "Please input a valid email!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                { required: true, message: "Please input the password!" },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please input the password!" },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
 
-            <Form.Item label="Role" name="role" initialValue={role}>
-              <p>Student Role</p>
-            </Form.Item>
+                <Form.Item label="Role" name="role" initialValue={role}>
+                  <p>Student Role</p>
+                </Form.Item>
 
-            <Form.Item
-              label="Select Classroom"
-              name="classroom"
-              rules={[
-                { required: true, message: "Please select a classroom!" },
-              ]}
-            >
-              <Select
-                placeholder="Select a classroom"
-                onChange={(value) => setSelectedClassroom(value)}
-              >
-                {classroomData?.map((classroom) => (
-                  <Option key={classroom.id} value={classroom.id}>
-                    {classroom.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+                <Form.Item
+                  label="Select Classroom"
+                  name="classroom"
+                  rules={[
+                    { required: true, message: "Please select a classroom!" },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select a classroom"
+                    onChange={(value) => setSelectedClassroom(value)}
+                  >
+                    {classroomData?.map((classroom) => (
+                      <Option key={classroom.id} value={classroom.id}>
+                        {classroom.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Register
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Register
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Modal>
+          )}
+        </>
       )}
-      {/* {isTimeTableModalVisible && (
+    </>
+  );
+};
+
+export default TeacherPage;
+
+{
+  /* {isTimeTableModalVisible && (
         <Modal
           title="Create Timetable"
           visible={isTimeTableModalVisible}
@@ -382,9 +407,5 @@ const TeacherPage = () => {
             </Form.Item>
           </Form>
         </Modal>
-      )} */}
-    </>
-  );
-};
-
-export default TeacherPage;
+      )} */
+}
